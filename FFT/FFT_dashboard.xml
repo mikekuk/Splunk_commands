@@ -1,0 +1,157 @@
+<form version="1.1" theme="dark">
+ <label>FFT</label>
+ <fieldset submitButton="true" autoRun="true">
+   <input type="text" token="period" searchWhenChanged="true">
+     <label>Period</label>
+     <default>10</default>
+   </input>
+   <input type="text" token="ratio" searchWhenChanged="true">
+     <label>Ratio</label>
+     <default>1.25</default>
+   </input>
+   <input type="text" token="threshold" searchWhenChanged="true">
+     <label>Threshold</label>
+     <default>4</default>
+   </input>
+ </fieldset>
+ <row>
+   <panel>
+     <chart>
+       <search>
+         <query>| makeresults count=10000
+| streamstats count as time
+| eval int = random() % 10 + 1
+| eval count = if((time % $period$) == 0, 1, 0)
+| eval total = count + (int / $ratio$)
+| table time total
+| fit FFT total FROM time
+| search Frequency!=0
+| eventstats mean(Amplitude) as meanAmplitude
+| eval aboveThreshold = if(Amplitude &gt; ($threshold$*meanAmplitude), Amplitude, NULL)
+| table Frequency Amplitude aboveThreshold</query>
+         <earliest>-24h@h</earliest>
+         <latest>now</latest>
+         <sampleRatio>1</sampleRatio>
+       </search>
+       <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+       <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+       <option name="charting.axisTitleX.visibility">visible</option>
+       <option name="charting.axisTitleY.visibility">visible</option>
+       <option name="charting.axisTitleY2.visibility">visible</option>
+       <option name="charting.axisX.abbreviation">none</option>
+       <option name="charting.axisX.scale">linear</option>
+       <option name="charting.axisY.abbreviation">none</option>
+       <option name="charting.axisY.scale">linear</option>
+       <option name="charting.axisY2.abbreviation">none</option>
+       <option name="charting.axisY2.enabled">0</option>
+       <option name="charting.axisY2.scale">inherit</option>
+       <option name="charting.chart">area</option>
+       <option name="charting.chart.bubbleMaximumSize">50</option>
+       <option name="charting.chart.bubbleMinimumSize">10</option>
+       <option name="charting.chart.bubbleSizeBy">area</option>
+       <option name="charting.chart.nullValueMode">gaps</option>
+       <option name="charting.chart.showDataLabels">none</option>
+       <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+       <option name="charting.chart.stackMode">default</option>
+       <option name="charting.chart.style">shiny</option>
+       <option name="charting.drilldown">none</option>
+       <option name="charting.layout.splitSeries">0</option>
+       <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+       <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+       <option name="charting.legend.mode">standard</option>
+       <option name="charting.legend.placement">right</option>
+       <option name="charting.lineWidth">2</option>
+       <option name="refresh.display">progressbar</option>
+       <option name="trellis.enabled">0</option>
+       <option name="trellis.scales.shared">1</option>
+       <option name="trellis.size">medium</option>
+     </chart>
+   </panel>
+ </row>
+ <row>
+   <panel>
+     <chart>
+       <search>
+         <query>| makeresults count=9999
+| streamstats count as time
+| eval int = random() % 10 + 1
+| eval count = if((time % $period$) == 0, 1, 0)
+| eval total = count + (int / $ratio$)
+| table time total</query>
+         <earliest>-24h@h</earliest>
+         <latest>now</latest>
+         <sampleRatio>1</sampleRatio>
+       </search>
+       <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+       <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+       <option name="charting.axisTitleX.visibility">visible</option>
+       <option name="charting.axisTitleY.visibility">visible</option>
+       <option name="charting.axisTitleY2.visibility">visible</option>
+       <option name="charting.axisX.abbreviation">none</option>
+       <option name="charting.axisX.scale">linear</option>
+       <option name="charting.axisY.abbreviation">none</option>
+       <option name="charting.axisY.scale">linear</option>
+       <option name="charting.axisY2.abbreviation">none</option>
+       <option name="charting.axisY2.enabled">0</option>
+       <option name="charting.axisY2.scale">inherit</option>
+       <option name="charting.chart">area</option>
+       <option name="charting.chart.bubbleMaximumSize">50</option>
+       <option name="charting.chart.bubbleMinimumSize">10</option>
+       <option name="charting.chart.bubbleSizeBy">area</option>
+       <option name="charting.chart.nullValueMode">gaps</option>
+       <option name="charting.chart.showDataLabels">none</option>
+       <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+       <option name="charting.chart.stackMode">default</option>
+       <option name="charting.chart.style">shiny</option>
+       <option name="charting.drilldown">none</option>
+       <option name="charting.layout.splitSeries">0</option>
+       <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+       <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+       <option name="charting.legend.mode">standard</option>
+       <option name="charting.legend.placement">right</option>
+       <option name="charting.lineWidth">2</option>
+       <option name="refresh.display">progressbar</option>
+       <option name="trellis.enabled">0</option>
+       <option name="trellis.scales.shared">1</option>
+       <option name="trellis.size">medium</option>
+     </chart>
+   </panel>
+ </row>
+ <row>
+   <panel>
+     <table>
+       <search>
+         <query>| makeresults count=10000
+| streamstats count as time
+| eval int = random() % 10 + 1
+| eval count = if((time % $period$) == 0, 1, 0)
+| eval total = count + (int / $ratio$)
+| table time total
+| fit FFT total FROM time
+| search Frequency!=0
+| eval rate = 1 / Frequency
+| eventstats avg(Amplitude) as mean, stdev(Amplitude) as stdev
+| eval distance_from_mean_in_std_dev = abs(Amplitude - mean) / stdev
+| eval Amplitude_times_Mean = Amplitude / mean
+| where Amplitude_times_Mean &gt; 4
+| streamstats current=f window=1 last(Frequency) as next_frequency
+| eval freq_diff = next_frequency - Frequency
+| streamstats current=f window=1 last(freq_diff) as next_freq_diff
+| eval diff_of_diff = abs(next_freq_diff - freq_diff)
+| table rate distance_from_mean_in_std_dev Amplitude_times_Mean</query>
+         <earliest>-24h@h</earliest>
+         <latest>now</latest>
+         <sampleRatio>1</sampleRatio>
+       </search>
+       <option name="count">20</option>
+       <option name="dataOverlayMode">none</option>
+       <option name="drilldown">none</option>
+       <option name="percentagesRow">false</option>
+       <option name="refresh.display">progressbar</option>
+       <option name="rowNumbers">false</option>
+       <option name="totalsRow">false</option>
+       <option name="wrap">true</option>
+     </table>
+   </panel>
+ </row>
+</form>
